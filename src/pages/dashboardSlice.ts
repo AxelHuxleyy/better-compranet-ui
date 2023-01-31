@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { ConfigPaginator, DistinctOptions, RequestValues } from 'interfaces';
+import { ConfigPaginator, DistinctOptions, RequestValues, SingleFilterInterface } from 'interfaces';
 import { SingleFilterEnum } from 'enums/singleFilter';
 import { Licitacion } from 'interfaces/licitacion';
 import _ from 'lodash';
@@ -12,6 +12,8 @@ interface LicitacionState {
   licitaciones?: Array<Licitacion>;
   currentKey?: SingleFilterEnum | string;
   configPaginator: ConfigPaginator;
+  singleFilter?: SingleFilterInterface;
+  groupFilter?: DistinctOptions;
 }
 
 const initialState: LicitacionState = {
@@ -44,11 +46,24 @@ export const counterSlice = createSlice({
     setConfigPaginator: (state, action: PayloadAction<Partial<ConfigPaginator>>) => {
       _.merge(state.configPaginator, action.payload);
     },
+    setSingleFilter: (state, action: PayloadAction<SingleFilterInterface>) => {
+      state.singleFilter = action.payload;
+    },
+    setGroupFilter: (state, action: PayloadAction<DistinctOptions>) => {
+      state.groupFilter = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setOptions, setCurrentKey, setRequestValues, setLicitaciones, setConfigPaginator } =
-  counterSlice.actions;
+export const {
+  setOptions,
+  setCurrentKey,
+  setRequestValues,
+  setLicitaciones,
+  setConfigPaginator,
+  setSingleFilter,
+  setGroupFilter,
+} = counterSlice.actions;
 
 export const licitacionesReducer = counterSlice.reducer;

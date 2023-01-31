@@ -9,12 +9,12 @@ import { SingleFilter } from './SingleFilter';
 
 export const Filters = () => {
   const stateLicitaciones = useAppSelector((x) => x.licitaciones);
-  const { options: values, requestValues } = stateLicitaciones;
+  const { options: values, singleFilter } = stateLicitaciones;
   const [numberInputs, setNumberInputs] = useState<Array<number>>([0]);
 
   const existKey = () => {
-    if (!requestValues) return false;
-    const keys = Object.keys(requestValues);
+    if (!singleFilter) return false;
+    const keys = Object.keys(singleFilter);
     const singleFilterKeys = Object.keys(SingleFilterEnum);
     const value = keys.some((x) => singleFilterKeys.includes(x));
     return value;

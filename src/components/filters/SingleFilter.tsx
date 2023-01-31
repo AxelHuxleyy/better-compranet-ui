@@ -10,7 +10,7 @@ import {
 
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { SingleFilterEnum } from 'enums';
-import { setRequestValues } from 'pages/dashboardSlice';
+import { setSingleFilter } from 'pages/dashboardSlice';
 import { Clear } from '@mui/icons-material';
 import { getLabelSingleFilter } from 'constants/getLabel';
 
@@ -22,15 +22,15 @@ interface Props {
 export const SingleFilter: FC<Props> = (props) => {
   const { removeItem, id } = props;
   const licitacionesState = useAppSelector((x) => x.licitaciones);
-  const { requestValues } = licitacionesState;
+  const { singleFilter } = licitacionesState;
   const dispatch = useAppDispatch();
   const [key, setKey] = useState<string>('');
 
   const resetRequest = () => {
-    const newObject = { ...requestValues };
-    if (!requestValues) return;
-    delete newObject[key as keyof typeof requestValues];
-    dispatch(setRequestValues({ ...newObject }));
+    const newObject = { ...singleFilter };
+    if (!singleFilter) return;
+    delete newObject[key as keyof typeof singleFilter];
+    dispatch(setSingleFilter({ ...newObject }));
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -40,9 +40,9 @@ export const SingleFilter: FC<Props> = (props) => {
 
   const settingValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(
-      setRequestValues({
-        ...requestValues,
-        [key as keyof typeof requestValues]: event.target.value,
+      setSingleFilter({
+        ...singleFilter,
+        [key as keyof typeof singleFilter]: event.target.value,
       }),
     );
   };
@@ -54,11 +54,11 @@ export const SingleFilter: FC<Props> = (props) => {
   };
 
   const getItems = () => {
-    if (!requestValues) {
+    if (!singleFilter) {
       return Object.keys(SingleFilterEnum).map((x) => ({ label: x, disabled: false }));
     }
     const onlyAvailableValues = Object.keys(SingleFilterEnum).map((x) => {
-      const isValueSelected = Object.keys(requestValues).includes(x);
+      const isValueSelected = Object.keys(singleFilter).includes(x);
       if (!isValueSelected) return { label: x, disabled: false };
       return { label: x, disabled: true };
     });

@@ -5,3 +5,4 @@ export * from './paginatorConfig';
 export * from './configPaginator';
 export * from './responseLicitaciones';
 export * from './licitacion';
+export * from './singleFilter';

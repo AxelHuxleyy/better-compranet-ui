@@ -12,7 +12,7 @@ import { setLicitaciones, setOptions, setConfigPaginator } from './dashboardSlic
 
 export const Dashboard = () => {
   const licitacionesState = useAppSelector((state) => state.licitaciones);
-  const { requestValues, configPaginator } = licitacionesState;
+  const { configPaginator, singleFilter, groupFilter } = licitacionesState;
   const { limit, page } = configPaginator;
   const dispatch = useAppDispatch();
 
@@ -28,24 +28,28 @@ export const Dashboard = () => {
     isLoading: loadingRequest,
     isFetching: fetchingRequest,
     refetch,
-  } = useQuery('licitaciones', () => getLicitaciones({ limit, page }, requestValues), {
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    onSuccess: (dataResponse: ResponseLicitaciones) => {
-      const data2 = dataResponse.data;
-      const changeData = data2.map((x: LicitacionInterface, index: number) => ({
-        ...x,
-        id: index,
-      }));
-      dispatch(setLicitaciones(changeData));
-      dispatch(setConfigPaginator({ totalResults: dataResponse.totalResults ?? 0 }));
+  } = useQuery(
+    'licitaciones',
+    () => getLicitaciones({ limit, page }, { ...singleFilter, ...groupFilter }),
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      onSuccess: (dataResponse: ResponseLicitaciones) => {
+        const data2 = dataResponse.data;
+        const changeData = data2.map((x: LicitacionInterface, index: number) => ({
+          ...x,
+          id: index,
+        }));
+        dispatch(setLicitaciones(changeData));
+        dispatch(setConfigPaginator({ totalResults: dataResponse.totalResults ?? 0 }));
+      },
     },
-  });
+  );
 
   useEffect(() => {
     refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestValues, limit, page]);
+  }, [singleFilter, groupFilter, limit, page]);
 
   if (isLoading) return <h1>Loading...</h1>;
 

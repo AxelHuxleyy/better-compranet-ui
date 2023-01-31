@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import { FilterOptions } from 'interfaces/filterOptions';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { setRequestValues } from 'pages';
-import { RequestValues } from 'interfaces/requestValues';
+import { useAppDispatch } from 'hooks/redux';
+import { setGroupFilter } from 'pages';
+import { DistinctOptions } from 'interfaces/distinctOptions';
 
 interface Props {
   data: Array<FilterOptions>;
@@ -24,8 +24,6 @@ export const GroupFilter: FC<Props> = (props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [dataConfig, setDataConfig] = useState<Array<FilterOptions>>(data);
   const open = Boolean(anchorEl);
-  const licitacionesState = useAppSelector((x) => x.licitaciones);
-  const { requestValues } = licitacionesState;
   const dispatch = useAppDispatch();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -38,15 +36,15 @@ export const GroupFilter: FC<Props> = (props) => {
 
   const applyFilters = () => {
     const getInformation = dataConfig.map((x) => {
-      const checked = x?.values?.filter((y) => y.checked);
+      const checked = x?.values?.filter((y) => y.checked === true);
       const onlyValues = checked?.map((z) => z.value);
       if (onlyValues && onlyValues.length > 0) return { [x.category]: [...onlyValues] };
       return undefined;
     });
 
     const onlyValidValues = getInformation.filter((x) => x !== undefined);
-    const arrayToJson: RequestValues = Object.assign({}, ...onlyValidValues);
-    dispatch(setRequestValues({ ...requestValues, ...arrayToJson }));
+    const arrayToJson: DistinctOptions = Object.assign({}, ...onlyValidValues);
+    dispatch(setGroupFilter({ ...arrayToJson }));
     handleClose();
   };
 
