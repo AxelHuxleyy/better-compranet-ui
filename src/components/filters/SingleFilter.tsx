@@ -25,6 +25,7 @@ export const SingleFilter: FC<Props> = (props) => {
   const { singleFilter } = licitacionesState;
   const dispatch = useAppDispatch();
   const [key, setKey] = useState<string>('');
+  const [value, setValue] = useState<string>('');
 
   const resetRequest = () => {
     const newObject = { ...singleFilter };
@@ -39,6 +40,9 @@ export const SingleFilter: FC<Props> = (props) => {
   };
 
   const settingValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const text = event.target.value;
+    if (text.trim() === '' && value === '') return;
+    setValue(text);
     dispatch(
       setSingleFilter({
         ...singleFilter,
@@ -49,6 +53,7 @@ export const SingleFilter: FC<Props> = (props) => {
 
   const cleanFilter = () => {
     setKey('');
+    setValue('');
     resetRequest();
     removeItem(id);
   };
@@ -68,7 +73,7 @@ export const SingleFilter: FC<Props> = (props) => {
   return (
     <div className="flex flex-row gap-3 flex-4 items-center">
       <FormControl sx={{ minWidth: 200 }}>
-        <InputLabel variant="standard">Filtro Individuales</InputLabel>
+        <InputLabel variant="standard">Filtrar Por:</InputLabel>
         <Select value={key} label="Filtro" onChange={handleChange} fullWidth variant="standard">
           {getItems().map((x) => (
             <MenuItem value={x.label ?? x} key={x.label ?? x} disabled={x.disabled}>
@@ -77,7 +82,9 @@ export const SingleFilter: FC<Props> = (props) => {
           ))}
         </Select>
       </FormControl>
-      {key !== '' && <TextField label="Valor" onChange={settingValue} variant="standard" />}
+      {key !== '' && (
+        <TextField label="Buscar" onChange={settingValue} variant="standard" value={value} />
+      )}
       {key !== '' && <Clear onClick={cleanFilter} sx={{ cursor: 'pointer' }} />}
     </div>
   );

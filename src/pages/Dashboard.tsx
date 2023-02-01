@@ -9,6 +9,7 @@ import {
   Licitacion as LicitacionInterface,
 } from 'interfaces';
 import { setLicitaciones, setOptions, setConfigPaginator } from './dashboardSlice';
+import { Loading } from './Loading';
 
 export const Dashboard = () => {
   const licitacionesState = useAppSelector((state) => state.licitaciones);
@@ -51,12 +52,12 @@ export const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleFilter, groupFilter, limit, page]);
 
-  if (isLoading) return <h1>Loading...</h1>;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="flex flex-col w-screen h-screen  p-14 gap-5">
       <div>
-        <h1 className="text-5xl font-bold">Dashboard</h1>
+        <h1 className="text-5xl font-bold">Find Licitaciones MX</h1>
         <h1 className="text-2xl">Este no es un sitio oficial de compranet!</h1>
         <h1 className="text-2xl">
           Estos datos fueron obtenidos del sitio oficial de compranet, solo se reflejan los datos

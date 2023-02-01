@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button, Tooltip } from '@mui/material';
+import { Button, Chip, Tooltip, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { visibilityModel } from 'constants/visibilityModel';
 import { setConfigPaginator } from 'pages/dashboardSlice';
 import { formatDate, formatDateTime } from 'utils/date';
+import { upperFirst } from 'utils/helpers';
 
 interface Props {
   loading: boolean;
@@ -19,6 +20,15 @@ export const Table: FC<Props> = (props) => {
 
   const goToURL = (url: string) => {
     window.open(url, '_blank');
+  };
+
+  const getColorChip = (text: string) => {
+    if (text === 'nacional') return 'success';
+    if (text === 'internacional') return 'primary';
+    if (text === 'No especificado') return 'error';
+    if (text === 'internacional bajo tlc') return 'secondary';
+    if (text === 'otro') return 'error';
+    return 'default';
   };
 
   const columns: GridColDef[] = [
@@ -39,6 +49,10 @@ export const Table: FC<Props> = (props) => {
       headerName: 'Carácter del exp.',
       description: 'Carácter del expediente',
       flex: 1,
+      renderCell: (params: GridRenderCellParams) => {
+        const { character } = params.row;
+        return <Chip color={getColorChip(character)} label={upperFirst(params.row.character)} />;
+      },
     },
     {
       field: 'form',
@@ -179,7 +193,7 @@ export const Table: FC<Props> = (props) => {
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
         <Button onClick={() => goToURL(params.row.url)} variant="contained">
-          ir al anuncio
+          <Typography variant="body2">Ver Anuncio</Typography>
         </Button>
       ),
     },
