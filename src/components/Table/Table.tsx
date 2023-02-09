@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button, Chip, Tooltip, Typography } from '@mui/material';
+import { Button, Tooltip, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { visibilityModel } from 'constants/visibilityModel';
 import { setConfigPaginator } from 'pages/dashboardSlice';
 import { formatDate, formatDateTime } from 'utils/date';
-import { upperFirst } from 'utils/helpers';
 
 interface Props {
   loading: boolean;
@@ -14,7 +13,7 @@ interface Props {
 export const Table: FC<Props> = (props) => {
   const { loading } = props;
   const stateLicitaciones = useAppSelector((x) => x.licitaciones);
-  const { licitaciones: rows, configPaginator } = stateLicitaciones;
+  const { contracts: rows, configPaginator } = stateLicitaciones;
   const { totalResults, page, limit } = configPaginator;
   const dispatch = useAppDispatch();
 
@@ -22,127 +21,93 @@ export const Table: FC<Props> = (props) => {
     window.open(url, '_blank');
   };
 
-  const getColorChip = (text: string) => {
-    if (text === 'nacional') return 'success';
-    if (text === 'internacional') return 'primary';
-    if (text === 'No especificado') return 'error';
-    if (text === 'internacional bajo tlc') return 'secondary';
-    if (text === 'otro') return 'error';
-    return 'default';
-  };
-
   const columns: GridColDef[] = [
     {
-      field: 'expCode',
-      headerName: 'Código de exp.',
-      description: 'Código de expediente',
+      field: 'govOrder',
+      headerName: 'Orden de gobierno',
       flex: 1,
     },
     {
-      field: 'expNumber',
-      headerName: 'numero de exp.',
-      description: 'Número de expediente',
+      field: 'instAcronym',
+      headerName: 'Siglas de la Institución',
+      description: 'Siglas de la Institución',
       flex: 1,
     },
     {
-      field: 'character',
-      headerName: 'Carácter del exp.',
-      description: 'Carácter del expediente',
+      field: 'inst',
+      headerName: 'Institución',
+      description: 'Institución',
       flex: 1,
-      renderCell: (params: GridRenderCellParams) => {
-        const { character } = params.row;
-        return <Chip color={getColorChip(character)} label={upperFirst(params.row.character)} />;
-      },
-    },
-    {
-      field: 'form',
-      headerName: 'Forma del proce.',
-      description: 'Forma del procedimiento',
-      flex: 1,
-    },
-    {
-      field: 'expRef',
-      headerName: 'Ref del exp.',
-      description: 'Referencia del expediente',
-      flex: 1,
-    },
-    {
-      field: 'expTitle',
-      headerName: 'Titulo expediente.',
-      description: 'Titulo del expediente',
-      flex: 1,
-      renderCell: (params: GridRenderCellParams) => (
-        <Tooltip title={params.row.expTitle as string} placement="top-start">
-          <span>{params.row.expTitle}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      field: 'expTemplate',
-      headerName: 'Plantilla',
-      description: 'Plantilla del expediente',
-      flex: 1,
-    },
-    {
-      field: 'descAdd',
-      headerName: 'Descripción anuncio',
-      description: 'Descripción del anuncio',
-      flex: 1,
-      type: 'string',
-      renderCell: (params: GridRenderCellParams) => (
-        <Tooltip title={params.row.descAdd as string} placement="top-start">
-          <span>{params.row.descAdd}</span>
-        </Tooltip>
-      ),
     },
     {
       field: 'keyUC',
-      headerName: 'Clave UC',
-      description: 'Clave UC',
+      headerName: 'Clave de la UC',
+      description: 'Clave de la UC',
       flex: 1,
     },
     {
       field: 'nameUC',
-      headerName: 'Nombre UC',
+      headerName: 'Nombre de la UC',
       description: 'Nombre de la UC',
       flex: 1,
     },
     {
-      field: 'operator',
-      headerName: 'Operador',
-      flex: 1,
-      renderCell: (params: GridRenderCellParams) => (
-        <Tooltip title={params.row.operator as string} placement="top-start">
-          <span>{params.row.operator}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      field: 'email',
-      headerName: 'email',
-      flex: 1,
-      renderCell: (params: GridRenderCellParams) => (
-        <Tooltip title={params.row.email as string} placement="top-start">
-          <span>{params.row.email}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      field: 'state',
-      headerName: 'Entidad',
-      description: 'Entidad Federativa',
+      field: 'managerUC',
+      headerName: 'Responsable de la UC',
+      description: 'Responsable de la UC',
       flex: 1,
     },
     {
-      field: 'type',
-      headerName: 'Tipo contratación',
-      description: 'Tipo de contratación',
+      field: 'expCode',
+      headerName: 'Código del expediente',
+      description: 'Código del expediente',
       flex: 1,
     },
     {
-      field: 'dateStart',
-      headerName: 'Publicación anuncio',
-      description: 'Publicación del anuncio',
+      field: 'expRef',
+      headerName: 'Referencia del expediente',
+      description: 'Referencia del expediente',
+      flex: 1,
+      type: 'string',
+    },
+    {
+      field: 'keyCUCOP',
+      headerName: 'Clave CUCOP',
+      description: 'Clave CUCOP',
+      flex: 1,
+    },
+    {
+      field: 'expTitle',
+      headerName: 'Título del expediente',
+      description: 'Título del expediente',
+      flex: 1,
+    },
+    {
+      field: 'expTemplate',
+      headerName: 'Plantilla del expediente',
+      flex: 1,
+    },
+    {
+      field: 'legal',
+      headerName: 'Fundamento legal',
+      flex: 1,
+    },
+    {
+      field: 'processNum',
+      headerName: 'Número del procedimiento',
+      description: 'Número del procedimiento',
+      flex: 1,
+    },
+    {
+      field: 'falloDate',
+      headerName: 'Fecha de fallo',
+      description: 'Fecha de fallo',
+      flex: 1,
+    },
+    {
+      field: 'publishDate',
+      headerName: 'Fecha de publicación',
+      description: 'Fecha de publicación',
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
         <Tooltip title={formatDateTime(params.row.dateStart)} placement="top-start">
@@ -151,9 +116,9 @@ export const Table: FC<Props> = (props) => {
       ),
     },
     {
-      field: 'dateEnd',
-      headerName: 'Vencimiento anuncio',
-      description: 'Vigencia del anuncio',
+      field: 'openDate',
+      headerName: 'Fecha de apertura',
+      description: 'Fecha de apertura',
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
         <Tooltip title={formatDateTime(params.row.dateEnd)} placement="top-start">
@@ -162,30 +127,165 @@ export const Table: FC<Props> = (props) => {
       ),
     },
     {
-      field: 'keyCOG',
-      headerName: 'Clave COG',
+      field: 'character',
+      headerName: 'Carácter del procedimiento',
       flex: 1,
     },
     {
-      field: 'creationDate',
-      headerName: 'Fecha de creación',
+      field: 'contractType',
+      headerName: 'Tipo de contratación',
       flex: 1,
-      renderCell: (params: GridRenderCellParams) => (
-        <Tooltip title={formatDateTime(params.row.creationDate)} placement="top-start">
-          <span>{formatDate(params.row.creationDate)}</span>
-        </Tooltip>
-      ),
     },
     {
-      field: 'lastUpdate',
-      headerName: 'Ultima actualización',
-      description: 'Fecha de ultima actualización',
+      field: 'processType',
+      headerName: 'Tipo de procedimiento',
+      description: 'Tipo de procedimiento',
       flex: 1,
-      renderCell: (params: GridRenderCellParams) => (
-        <Tooltip title={formatDateTime(params.row.lastUpdate)} placement="top-start">
-          <span>{formatDate(params.row.lastUpdate)}</span>
-        </Tooltip>
-      ),
+    },
+    {
+      field: 'formParticipation',
+      headerName: 'Forma de participación',
+      flex: 1,
+    },
+    {
+      field: 'contractCode',
+      headerName: 'Código del contrato',
+      description: 'Código del contrato',
+      flex: 1,
+    },
+    {
+      field: 'contractControlNum',
+      headerName: 'Núm. de control del contrato',
+      description: 'Núm. de control del contrato',
+      flex: 1,
+    },
+    {
+      field: 'contractTitle',
+      headerName: 'Título del contrato',
+      description: 'Título del contrato',
+      flex: 1,
+    },
+    {
+      field: 'contractDesc',
+      headerName: 'Descripción del contrato',
+      description: 'Descripción del contrato',
+      flex: 1,
+    },
+    {
+      field: 'contractStartDate',
+      headerName: 'Fecha de inicio del contrato',
+      description: 'Fecha de inicio del contrato',
+      flex: 1,
+    },
+    {
+      field: 'contractEndDate',
+      headerName: 'Fecha de fin del contrato',
+      description: 'Fecha de fin del contrato',
+      flex: 1,
+    },
+    {
+      field: 'contractAmount',
+      headerName: 'Importe del contrato',
+      description: 'Importe del contrato',
+      flex: 1,
+      type: 'number',
+    },
+    {
+      field: 'contractCurrency',
+      headerName: 'Moneda del contrato',
+      description: 'Moneda del contrato',
+      flex: 1,
+    },
+    {
+      field: 'contractEstatus',
+      headerName: 'Estatus del contrato',
+      description: 'Estatus del contrato',
+      flex: 1,
+    },
+    {
+      field: 'modifyConvenio',
+      headerName: 'Convenio modificatorio',
+      type: 'boolean',
+      flex: 1,
+    },
+    {
+      field: 'keyProgramFederal',
+      headerName: 'Clave del programa federal',
+      flex: 1,
+    },
+    {
+      field: 'contractSignDate',
+      headerName: 'Fecha de firma del contrato',
+      description: 'Fecha de firma del contrato',
+      flex: 1,
+    },
+    {
+      field: 'contractMarco',
+      headerName: 'Contrato marco',
+      description: 'Contrato marco',
+      flex: 1,
+    },
+    {
+      field: 'purchaseCompleted',
+      headerName: 'Compra consolidada',
+      type: 'boolean',
+      flex: 1,
+    },
+    {
+      field: 'contractPluriannual',
+      headerName: 'Contrato plurianual',
+      description: 'Contrato plurianual',
+      type: 'boolean',
+      flex: 1,
+    },
+    {
+      field: 'keyWalletSHCP',
+      headerName: 'Clave de cartera SHCP',
+      flex: 1,
+    },
+    {
+      field: 'folioRUPC',
+      headerName: 'Folio en el RUPC',
+      description: 'Folio en el RUPC',
+      flex: 1,
+    },
+    {
+      field: 'providerName',
+      headerName: 'Proveedor o contratista',
+      description: 'Proveedor o contratista',
+      flex: 1,
+    },
+    {
+      field: 'companySize',
+      headerName: 'Estratificación de la empresa',
+      description: 'Estratificación de la empresa',
+      flex: 1,
+    },
+    {
+      field: 'companyCountryKey',
+      headerName: 'Clave del país de la empresa',
+      description: 'Clave del país de la empresa',
+      flex: 1,
+    },
+    {
+      field: 'rfcVerified',
+      headerName: 'RFC verificado en el SAT',
+      description: 'RFC verificado en el SAT',
+      type: 'boolean',
+      flex: 1,
+    },
+    {
+      field: 'externCredit',
+      headerName: 'Crédito externo',
+      description: 'Crédito externo',
+      flex: 1,
+    },
+    {
+      field: 'financialOrganization',
+      headerName: 'Organismo financiero',
+      description: 'Organismo financiero',
+      flex: 1,
+      type: 'string',
     },
     {
       field: 'url',

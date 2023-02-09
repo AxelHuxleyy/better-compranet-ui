@@ -6,3 +6,5 @@ export * from './configPaginator';
 export * from './responseLicitaciones';
 export * from './licitacion';
 export * from './singleFilter';
+export * from './contract';
+export * from './responseContracts';
