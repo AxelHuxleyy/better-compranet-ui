@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppSelector } from 'hooks/redux';
 import { FilterOptions } from 'interfaces';
-import { getLabel } from 'constants/getLabel';
+import { getGroupLabel } from 'constants/getLabel';
 import { SingleFilterEnum } from 'enums';
 import { Button } from '@mui/material';
 import { GroupFilter } from './GroupFilter';
@@ -24,21 +24,20 @@ export const Filters = () => {
     setNumberInputs([...numberInputs, numberInputs.length]);
   };
 
-  const settingUPData = (): Array<FilterOptions> => {
+  const settingUPDataToGroupFilter = (): Array<FilterOptions> => {
     if (!values) return [];
     const data = Object.keys(values).map((key) => {
       if (!key) return { category: '', values: [], isOpen: false, textSearch: '', label: '' };
       const formatValues =
-        values[key as keyof typeof values]?.map((x) => ({ value: x, checked: false })) ?? [];
+        values[key as keyof typeof values]?.map((x) => ({ value: `${x}`, checked: false })) ?? [];
       return {
         category: key ?? '',
         values: formatValues,
         isOpen: false,
         textSearch: '',
-        label: getLabel[key as keyof typeof getLabel] ?? '',
+        label: getGroupLabel[key as keyof typeof getGroupLabel] ?? '',
       };
     });
-
     return data;
   };
 
@@ -56,10 +55,9 @@ export const Filters = () => {
         </Button>
       )}
       {numberInputs.map((x) => (
-        // eslint-disable-next-line react/no-array-index-key
         <SingleFilter key={x} removeItem={onRemoveInput} id={x} />
       ))}
-      <GroupFilter data={settingUPData()} />
+      <GroupFilter data={settingUPDataToGroupFilter()} />
     </div>
   );
 };

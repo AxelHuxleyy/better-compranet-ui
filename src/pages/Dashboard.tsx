@@ -1,14 +1,10 @@
 import React, { useEffect } from 'react';
 import { Filters, Table } from 'components';
 import { useQuery } from 'react-query';
-import { getDistincsValues, getLicitaciones } from 'api';
+import { getContracts, getContractsDistincsValues } from 'api';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import {
-  DistinctOptions,
-  ResponseLicitaciones,
-  Licitacion as LicitacionInterface,
-} from 'interfaces';
-import { setLicitaciones, setOptions, setConfigPaginator } from './dashboardSlice';
+import { DistinctOptions, ResponseContracts, Contract } from 'interfaces';
+import { setContracts, setOptions, setConfigPaginator } from './dashboardSlice';
 import { Loading } from './Loading';
 
 export const Dashboard = () => {
@@ -17,7 +13,7 @@ export const Dashboard = () => {
   const { limit, page } = configPaginator;
   const dispatch = useAppDispatch();
 
-  const { isLoading } = useQuery('todos', getDistincsValues, {
+  const { isLoading } = useQuery('distincsValues', getContractsDistincsValues, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     onSuccess: (dataResponse: DistinctOptions) => {
@@ -31,17 +27,17 @@ export const Dashboard = () => {
     refetch,
   } = useQuery(
     'licitaciones',
-    () => getLicitaciones({ limit, page }, { ...singleFilter, ...groupFilter }),
+    () => getContracts({ limit, page }, { ...singleFilter, ...groupFilter }),
     {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
-      onSuccess: (dataResponse: ResponseLicitaciones) => {
+      onSuccess: (dataResponse: ResponseContracts) => {
         const data2 = dataResponse.data;
-        const changeData = data2.map((x: LicitacionInterface, index: number) => ({
+        const changeData = data2.map((x: Contract, index: number) => ({
           ...x,
           id: index,
         }));
-        dispatch(setLicitaciones(changeData));
+        dispatch(setContracts(changeData));
         dispatch(setConfigPaginator({ totalResults: dataResponse.totalResults ?? 0 }));
       },
     },
